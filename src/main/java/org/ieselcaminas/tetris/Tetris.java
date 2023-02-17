@@ -4,17 +4,44 @@
  */
 package org.ieselcaminas.tetris;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
+
 /**
  *
  * @author victor
  */
 public class Tetris extends javax.swing.JFrame {
+    
+    private Timer timer;
+    private Shape currentShape;
+    private int currentRow;
+    private int deltaTime;
 
     /**
      * Creates new form Tetris
      */
     public Tetris() {
         initComponents();
+        myInit();
+    }
+    
+    public void myInit() {
+        currentShape = new Shape();
+        currentRow = 0;
+        deltaTime = 500;
+        timer = new Timer(deltaTime, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                tick();
+            }
+                
+        });
+    }
+    
+    private void tick() {
+        
     }
 
     /**
