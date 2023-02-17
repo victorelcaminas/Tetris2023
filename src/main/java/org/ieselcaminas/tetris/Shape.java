@@ -25,7 +25,7 @@ public class Shape {
     private int coords[][]; 
     
     public Shape() {
-        setShape(Tetrominoes.NoShape);
+        setRandomShape();
     }
     
     public void setShape(Tetrominoes shapeType) {
@@ -36,4 +36,65 @@ public class Shape {
         }
         pieceShape = shapeType;
     }
+    
+    public void setX(int index, int x) {
+        coords[index][0] = x;
+    }
+    public void setY(int index, int y) {
+        coords[index][1] = y;
+    }
+    
+    public int getX(int index) {
+        return coords[index][0];
+    }
+    public int getY(int index) {
+        return coords[index][1];
+    }
+    public void setRandomShape() {
+        int random = (int)(Math.random() * 7 ) + 1;
+        Tetrominoes tetro = Tetrominoes.values()[random];
+        setShape(tetro);
+    }
+    
+    public int minX() {
+        int min = coords[0][0];
+        for (int i = 1; i < 4; i++) {
+            if (coords[i][0] < min) {
+                min = coords[i][0];
+            }
+        }
+        return min;
+    }
+    
+    public int maxX() {
+        int max = coords[0][0];
+        for (int i = 1; i < 4; i++) {
+            if (coords[i][0] > max) {
+                max = coords[i][0];
+            }
+        }
+        return max;
+    }
+    
+    public int minY() {
+        int min = coords[0][1];
+        for (int i = 1; i < 4; i++) {
+            if (coords[i][1] < min) {
+                min = coords[i][4];
+            }
+        }
+        return min;
+    }
+    
+    public int maxY() {
+        int max = coords[0][1];
+        for (int i = 1; i < 4; i++) {
+            if (coords[i][1] > max) {
+                max = coords[i][1];
+            }
+        }
+        return max;
+    }
+            
+            
 }
