@@ -25,6 +25,7 @@ public class Shape {
     private int coords[][]; 
     
     public Shape() {
+        coords = new int[4][2];
         setRandomShape();
     }
     
@@ -95,6 +96,9 @@ public class Shape {
         }
         return max;
     }
-            
+      
+    public Tetrominoes getShape() {
+        return pieceShape;
+    }
             
 }
