@@ -96,6 +96,18 @@ public class Shape {
         }
         return max;
     }
+    
+    public Shape rotateLeft() {
+        Shape newShape = new Shape();
+        newShape.setShape(pieceShape);
+        if (pieceShape != Tetrominoes.SquareShape) {
+            for (int i = 0; i < 4; i++) {
+                newShape.setX(i, getY(i));
+                newShape.setY(i, -getX(i));
+            }
+        }
+        return newShape;
+    }
       
     public Tetrominoes getShape() {
         return pieceShape;

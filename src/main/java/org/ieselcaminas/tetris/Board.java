@@ -27,8 +27,8 @@ public class Board extends javax.swing.JPanel {
     private int deltaTime;
     
     private Tetrominoes[][] matrix;
-    
-    
+
+  
     class MyKeyAdapter extends KeyAdapter {
 
         @Override
@@ -45,10 +45,15 @@ public class Board extends javax.swing.JPanel {
                     }
                     break;
                 case KeyEvent.VK_UP:
-// whatever
+                    Shape rotated = currentShape.rotateLeft();
+                    if (canMove(currentRow, currentCol, rotated)) {
+                        currentShape = rotated;
+                    }
                     break;
                 case KeyEvent.VK_DOWN:
-// whatever
+                    if (canMove(currentRow + 1, currentCol, currentShape)) {
+                        currentRow++;
+                    }
                     break;
                 default:
                     break;
@@ -72,19 +77,27 @@ public class Board extends javax.swing.JPanel {
         return getHeight() / NUM_ROWS;
     }
     
-    public void myInit() {
-        setFocusable(true);
-        MyKeyAdapter keyAdepter = new MyKeyAdapter();
-        addKeyListener(keyAdepter);
+    public void resetMatrix() {
         matrix = new Tetrominoes[NUM_ROWS][NUM_COLS];
         for (int row = 0; row < NUM_ROWS; row++) {
             for (int col = 0; col < NUM_COLS; col++) {
                 matrix[row][col] = Tetrominoes.NoShape;
             }
         }
-        currentShape = new Shape();
+    }
+    
+    public void resetPosition() {
         currentRow = 0;
         currentCol = NUM_COLS / 2;
+    }
+    
+    public void myInit() {
+        setFocusable(true);
+        MyKeyAdapter keyAdepter = new MyKeyAdapter();
+        addKeyListener(keyAdepter);
+        resetMatrix();
+        resetPosition();
+        currentShape = new Shape();
         deltaTime = 500;
         timer = new Timer(deltaTime, new ActionListener() {
             @Override
@@ -99,8 +112,20 @@ public class Board extends javax.swing.JPanel {
     private void tick() {
         if (canMove(currentRow + 1, currentCol, currentShape)) {
            currentRow ++;
+        } else {
+            movePieceToMatrix();
+            resetPosition();
+            currentShape.setRandomShape();
         }
         repaint();
+    }
+    
+    private void movePieceToMatrix() {
+       for (int i = 0; i < 4; i ++) {
+           int row = currentRow + currentShape.getY(i);
+           int col = currentCol + currentShape.getX(i);
+           matrix[row][col] = currentShape.getShape();
+       }
     }
     
     private boolean canMove(int row, int col, Shape piece) {
@@ -110,7 +135,22 @@ public class Board extends javax.swing.JPanel {
         if (col + piece.minX() < 0 || col + piece.maxX() >= NUM_COLS) {
             return false;
         }
+        if (colidesWithMatrix(row, col, piece)) {
+            return false;
+        }
         return true;
+    }
+    
+    private boolean colidesWithMatrix(int row, int col, Shape shape) {
+        for (int i = 0; i < 4; i ++) {
+            int newRow = row + shape.getY(i);
+            int newCol = col + shape.getX(i);
+            if (matrix[newRow][newCol] != Tetrominoes.NoShape) {
+                return true;
+            }
+        }
+        return false;
+            
     }
     
     @Override
@@ -122,13 +162,15 @@ public class Board extends javax.swing.JPanel {
         paintShape(g);
         Toolkit.getDefaultToolkit().sync();
     }
+    
     private void paintMatrix(Graphics g) {
         for (int row = 0; row < NUM_ROWS; row++) {
             for (int col = 0; col < NUM_COLS; col++) {
-                drawSquare(g, row, col, );
+                drawSquare(g, row, col, matrix[row][col]);
             }
         }
     }
+    
     private void paintShape(Graphics g) {
         for(int i = 0; i < 4; i++) {
             int row = currentRow + currentShape.getY(i);
