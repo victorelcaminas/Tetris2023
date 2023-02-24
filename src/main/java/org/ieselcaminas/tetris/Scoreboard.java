@@ -8,13 +8,34 @@ package org.ieselcaminas.tetris;
  *
  * @author victor
  */
-public class Scoreboard extends javax.swing.JPanel {
+public class Scoreboard extends javax.swing.JPanel implements Incrementer {
+    
+    private int score;
 
     /**
      * Creates new form Scoreboard
      */
     public Scoreboard() {
         initComponents();
+        myInits();
+    }
+    
+    public void myInits() {
+        resetScore();
+    }
+    
+    public void resetScore() {
+        score = 0;
+        labelScore.setText("0");
+    }
+    
+    public void incrementScore(int increment) {
+        score += increment;
+        labelScore.setText("" + score);
+    }
+    
+    public void doSomething() {
+        
     }
 
     /**

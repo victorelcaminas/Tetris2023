@@ -26,8 +26,13 @@ public class Board extends javax.swing.JPanel {
     private int currentCol;
     private int deltaTime;
     
+    private Incrementer incrementer;
+    
     private Tetrominoes[][] matrix;
 
+    public void setIncrementer(Incrementer incrementer) {
+        this.incrementer = incrementer;
+    }
   
     class MyKeyAdapter extends KeyAdapter {
 
@@ -109,11 +114,55 @@ public class Board extends javax.swing.JPanel {
         timer.start();
     }
     
+    private boolean isCompletedRow(int row) {
+        for (int col = 0; col < NUM_COLS; col++) {
+            if (matrix[row][col] == Tetrominoes.NoShape) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private void removeRow(int row) {
+        for (int i = row; i > 0; i--) {
+            for (int col = 0; col < NUM_COLS; col ++) {
+                matrix[i][col] = matrix[i - 1][col];
+            }
+        }
+        addZeroRow();
+    }
+    
+    public void addZeroRow() {
+        for (int col = 0; col < NUM_COLS; col++) {
+            matrix[0][col] = Tetrominoes.NoShape;
+        }
+    }
+    
+    private void checkCompletedRows() {
+        int row = NUM_ROWS - 1;
+        while (row >= 0) {
+            if (isCompletedRow(row)) {
+                removeRow(row);
+                incrementer.incrementScore(10);
+            } else {
+                row --;
+            }
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     private void tick() {
         if (canMove(currentRow + 1, currentCol, currentShape)) {
            currentRow ++;
         } else {
             movePieceToMatrix();
+            checkCompletedRows();
             resetPosition();
             currentShape.setRandomShape();
         }
@@ -124,7 +173,9 @@ public class Board extends javax.swing.JPanel {
        for (int i = 0; i < 4; i ++) {
            int row = currentRow + currentShape.getY(i);
            int col = currentCol + currentShape.getX(i);
-           matrix[row][col] = currentShape.getShape();
+           if (row >= 0) {
+             matrix[row][col] = currentShape.getShape();
+           }
        }
     }
     
@@ -145,6 +196,9 @@ public class Board extends javax.swing.JPanel {
         for (int i = 0; i < 4; i ++) {
             int newRow = row + shape.getY(i);
             int newCol = col + shape.getX(i);
+            if (newRow < 0) {
+                continue;
+            }
             if (matrix[newRow][newCol] != Tetrominoes.NoShape) {
                 return true;
             }

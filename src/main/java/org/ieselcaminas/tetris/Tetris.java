@@ -22,6 +22,11 @@ public class Tetris extends javax.swing.JFrame {
      */
     public Tetris() {
         initComponents();
+        myInit();
+    }
+    
+    private void myInit() {
+        board.setIncrementer(scoreboard);
     }
     
     
