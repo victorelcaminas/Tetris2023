@@ -26,6 +26,7 @@ public class Tetris extends javax.swing.JFrame {
     }
     
     private void myInit() {
+        setLocationRelativeTo(null);
         board.setIncrementer(scoreboard);
     }
     
@@ -47,6 +48,7 @@ public class Tetris extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         menuInitGame = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
+        mebuConfig = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().add(scoreboard, java.awt.BorderLayout.PAGE_END);
@@ -77,6 +79,15 @@ public class Tetris extends javax.swing.JFrame {
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Edit");
+
+        mebuConfig.setText("Configuration");
+        mebuConfig.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mebuConfigActionPerformed(evt);
+            }
+        });
+        jMenu2.add(mebuConfig);
+
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -87,6 +98,11 @@ public class Tetris extends javax.swing.JFrame {
     private void menuInitGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuInitGameActionPerformed
         board.initGame();
     }//GEN-LAST:event_menuInitGameActionPerformed
+
+    private void mebuConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mebuConfigActionPerformed
+        ConfigDialog dialog = new ConfigDialog(this, true);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_mebuConfigActionPerformed
 
     /**
      * @param args the command line arguments
@@ -128,6 +144,7 @@ public class Tetris extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem mebuConfig;
     private javax.swing.JMenuItem menuInitGame;
     private org.ieselcaminas.tetris.Scoreboard scoreboard;
     // End of variables declaration//GEN-END:variables
