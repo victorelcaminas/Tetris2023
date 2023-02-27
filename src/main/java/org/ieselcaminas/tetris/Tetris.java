@@ -43,6 +43,10 @@ public class Tetris extends javax.swing.JFrame {
 
         scoreboard = new org.ieselcaminas.tetris.Scoreboard();
         board = new org.ieselcaminas.tetris.Board();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        menuInitGame = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().add(scoreboard, java.awt.BorderLayout.PAGE_END);
@@ -55,13 +59,34 @@ public class Tetris extends javax.swing.JFrame {
         );
         boardLayout.setVerticalGroup(
             boardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 272, Short.MAX_VALUE)
+            .addGap(0, 247, Short.MAX_VALUE)
         );
 
         getContentPane().add(board, java.awt.BorderLayout.CENTER);
 
+        jMenu1.setText("File");
+
+        menuInitGame.setText("Init Game");
+        menuInitGame.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuInitGameActionPerformed(evt);
+            }
+        });
+        jMenu1.add(menuInitGame);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void menuInitGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuInitGameActionPerformed
+        board.initGame();
+    }//GEN-LAST:event_menuInitGameActionPerformed
 
     /**
      * @param args the command line arguments
@@ -100,6 +125,10 @@ public class Tetris extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private org.ieselcaminas.tetris.Board board;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem menuInitGame;
     private org.ieselcaminas.tetris.Scoreboard scoreboard;
     // End of variables declaration//GEN-END:variables
 }

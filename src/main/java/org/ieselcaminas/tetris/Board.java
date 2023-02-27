@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 /**
@@ -29,36 +30,52 @@ public class Board extends javax.swing.JPanel {
     private Incrementer incrementer;
     
     private Tetrominoes[][] matrix;
+    
+    private MyKeyAdapter keyAdapter;
 
     public void setIncrementer(Incrementer incrementer) {
         this.incrementer = incrementer;
     }
+
   
     class MyKeyAdapter extends KeyAdapter {
+        
+        private boolean paused = false;
+
+        public boolean isPaused() {
+            return paused;
+        }
+
+        public void setPaused(boolean paused) {
+            this.paused = paused;
+        }
 
         @Override
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
-                    if (canMove(currentRow, currentCol - 1, currentShape)) {
+                    if (!paused && canMove(currentRow, currentCol - 1, currentShape)) {
                         currentCol--;
                     }
                     break;
                 case KeyEvent.VK_RIGHT:
-                    if (canMove(currentRow, currentCol + 1, currentShape)) {
+                    if (!paused && canMove(currentRow, currentCol + 1, currentShape)) {
                         currentCol++;
                     }
                     break;
                 case KeyEvent.VK_UP:
                     Shape rotated = currentShape.rotateLeft();
-                    if (canMove(currentRow, currentCol, rotated)) {
+                    if (!paused && canMove(currentRow, currentCol, rotated)) {
                         currentShape = rotated;
                     }
                     break;
                 case KeyEvent.VK_DOWN:
-                    if (canMove(currentRow + 1, currentCol, currentShape)) {
+                    if (!paused && canMove(currentRow + 1, currentCol, currentShape)) {
                         currentRow++;
                     }
+                    break;
+                case KeyEvent.VK_SPACE:
+                    paused = !paused;
                     break;
                 default:
                     break;
@@ -96,22 +113,33 @@ public class Board extends javax.swing.JPanel {
         currentCol = NUM_COLS / 2;
     }
     
-    public void myInit() {
-        setFocusable(true);
-        MyKeyAdapter keyAdepter = new MyKeyAdapter();
-        addKeyListener(keyAdepter);
+    public void initGame() {
         resetMatrix();
         resetPosition();
         currentShape = new Shape();
         deltaTime = 500;
+        incrementer.resetScore();
+        timer.start();
+        repaint();
+    }
+    
+    public void myInit() {
+        resetMatrix();
+        deltaTime = 500;
+        setFocusable(true);
+        keyAdapter = new MyKeyAdapter();
+        addKeyListener(keyAdapter);
+        
         timer = new Timer(deltaTime, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
-                tick();
+                if (!keyAdapter.isPaused()) {
+                    tick();
+                }
             }
                 
         });
-        timer.start();
+        
     }
     
     private boolean isCompletedRow(int row) {
@@ -149,24 +177,28 @@ public class Board extends javax.swing.JPanel {
             }
         }
     }
-    
-    
-    
-    
-    
-    
-    
+
     
     private void tick() {
         if (canMove(currentRow + 1, currentCol, currentShape)) {
            currentRow ++;
         } else {
-            movePieceToMatrix();
-            checkCompletedRows();
-            resetPosition();
-            currentShape.setRandomShape();
+            if (currentRow == 0) {
+                processGameOver();
+            } else {
+                movePieceToMatrix();
+                checkCompletedRows();
+                resetPosition();
+                currentShape.setRandomShape();
+            }
         }
         repaint();
+    }
+    
+    private void processGameOver() {
+        timer.stop();
+        removeKeyListener(keyAdapter);
+        JOptionPane.showMessageDialog(this, "Game Over", "Game Over", JOptionPane.INFORMATION_MESSAGE);
     }
     
     private void movePieceToMatrix() {
@@ -213,7 +245,9 @@ public class Board extends javax.swing.JPanel {
         // paintBoard(g);
         paintFrame(g);
         paintMatrix(g);
-        paintShape(g);
+        if (currentShape != null) {
+            paintShape(g);
+        }
         Toolkit.getDefaultToolkit().sync();
     }
     
