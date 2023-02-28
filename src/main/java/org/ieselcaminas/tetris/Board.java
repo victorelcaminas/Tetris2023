@@ -117,20 +117,34 @@ public class Board extends javax.swing.JPanel {
         resetMatrix();
         resetPosition();
         currentShape = new Shape();
-        deltaTime = 500;
+        setDeltaTime();
+        timer.setDelay(deltaTime);
         incrementer.resetScore();
         timer.start();
         repaint();
     }
     
+    public void setDeltaTime() {
+        switch (ConfigData.instance.getLevel()) {
+            case 0: deltaTime = 500;
+                break;
+            case 1: deltaTime = 300;
+                break;
+            case 2: deltaTime = 150;
+                break;
+            default:
+                throw new AssertionError();
+        }
+    }
+    
     public void myInit() {
         resetMatrix();
-        deltaTime = 500;
+        //deltaTime = 500;
         setFocusable(true);
         keyAdapter = new MyKeyAdapter();
         addKeyListener(keyAdapter);
         
-        timer = new Timer(deltaTime, new ActionListener() {
+        timer = new Timer(0, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 if (!keyAdapter.isPaused()) {
