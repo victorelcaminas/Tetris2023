@@ -114,11 +114,11 @@ public class Board extends javax.swing.JPanel {
     }
     
     public void initGame() {
+        addKeyListener(keyAdapter);
         resetMatrix();
         resetPosition();
         currentShape = new Shape();
         setDeltaTime();
-        timer.setDelay(deltaTime);
         incrementer.resetScore();
         timer.start();
         repaint();
@@ -135,6 +135,7 @@ public class Board extends javax.swing.JPanel {
             default:
                 throw new AssertionError();
         }
+        timer.setDelay(deltaTime);
     }
     
     public void myInit() {
@@ -142,7 +143,7 @@ public class Board extends javax.swing.JPanel {
         //deltaTime = 500;
         setFocusable(true);
         keyAdapter = new MyKeyAdapter();
-        addKeyListener(keyAdapter);
+        
         
         timer = new Timer(0, new ActionListener() {
             @Override
