@@ -9,7 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 /**
@@ -28,6 +30,7 @@ public class Board extends javax.swing.JPanel {
     private int deltaTime;
     
     private Incrementer incrementer;
+    private GetScorer getScorer;
     
     private Tetrominoes[][] matrix;
     
@@ -35,6 +38,10 @@ public class Board extends javax.swing.JPanel {
 
     public void setIncrementer(Incrementer incrementer) {
         this.incrementer = incrementer;
+    }
+    
+    public void setGetScorer(GetScorer getScorer) {
+        this.getScorer = getScorer;
     }
 
   
@@ -213,7 +220,10 @@ public class Board extends javax.swing.JPanel {
     private void processGameOver() {
         timer.stop();
         removeKeyListener(keyAdapter);
-        JOptionPane.showMessageDialog(this, "Game Over", "Game Over", JOptionPane.INFORMATION_MESSAGE);
+        JFrame parentJFrame = (JFrame) SwingUtilities.getWindowAncestor(this); 
+        HighScoresDialog dialog = new HighScoresDialog(parentJFrame ,true);
+        dialog.setGetScorer(getScorer);
+        dialog.setVisible(true);
     }
     
     private void movePieceToMatrix() {

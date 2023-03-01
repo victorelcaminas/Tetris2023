@@ -28,6 +28,7 @@ public class Tetris extends javax.swing.JFrame {
     private void myInit() {
         setLocationRelativeTo(null);
         board.setIncrementer(scoreboard);
+        board.setGetScorer(scoreboard);
     }
     
     
