@@ -4,10 +4,15 @@
  */
 package org.ieselcaminas.tetris;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,7 +30,8 @@ public class Scores {
         }
     }
     
-    public void addScore(Score score, int level) {
+    public void addScore(Score score) {
+        int level = score.getLevel();
         List<Score> list = lists[level];
         if (list.size() > NUM_HIGH_SCORES) {
             if (score.getScore() > getMinScore(level)) {
@@ -36,6 +42,7 @@ public class Scores {
         } else {
             list.add(score);
         }
+        writeListsToFile();
     }
     
     private int getMinScore(int level) {
@@ -48,4 +55,24 @@ public class Scores {
         return min;
     }
     
+    private void writeListsToFile() {
+        ObjectOutputStream out = null;
+        try {
+            out = new ObjectOutputStream(
+                    new FileOutputStream("scores.dat"));
+            for (List<Score> list : lists) {
+                out.writeObject(list);
+            }
+        } catch(IOException ex) {
+            ex.printStackTrace();               
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
 }

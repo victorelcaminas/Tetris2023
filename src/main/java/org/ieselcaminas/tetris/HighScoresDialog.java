@@ -4,6 +4,8 @@
  */
 package org.ieselcaminas.tetris;
 
+import java.util.Calendar;
+
 /**
  *
  * @author victor
@@ -25,6 +27,12 @@ public class HighScoresDialog extends javax.swing.JDialog {
     
     public void setGetScorer(GetScorer getScorer) {
         this.getSCorer = getScorer;
+        Score score = new Score(ConfigData.instance.getName(),
+           getSCorer.getScore(),
+            Calendar.getInstance(), 
+           ConfigData.instance.getLevel());
+        
+        scores.addScore(score);
     }
 
     /**

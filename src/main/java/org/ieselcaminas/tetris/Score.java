@@ -4,24 +4,30 @@
  */
 package org.ieselcaminas.tetris;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 /**
  *
  * @author victor
  */
-public class Score implements Comparable<Score>{
+public class Score implements Comparable<Score>, Serializable {
     
     private String name;
     private int score;
     private Calendar date;
     private int level;
 
+
     public Score(String name, int score, Calendar date, int level) {
         this.name = name;
         this.score = score;
         this.date = date;
         this.level = level;
+    }
+    
+    public int getLevel() {
+        return level;
     }
 
     public int getScore() {
