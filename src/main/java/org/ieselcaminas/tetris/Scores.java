@@ -4,15 +4,8 @@
  */
 package org.ieselcaminas.tetris;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.*;
+import java.util.*;
 
 /**
  *
@@ -22,18 +15,27 @@ public class Scores {
     
     public static final int NUM_HIGH_SCORES = 5;
     private List<Score>[] lists;
+
     
     public Scores() {
         lists = new ArrayList[3];
         for (int i = 0; i < lists.length; i++) {
             lists[i] = new ArrayList<>();
         }
+        readListFromFile();
+        for (List<Score> list : lists) {
+            System.out.println(list);
+        }
+    }
+    
+    public List<Score>[] getLists() {
+        return lists;
     }
     
     public void addScore(Score score) {
         int level = score.getLevel();
         List<Score> list = lists[level];
-        if (list.size() > NUM_HIGH_SCORES) {
+        if (list.size() >= NUM_HIGH_SCORES) {
             if (score.getScore() > getMinScore(level)) {
                 list.add(score);
                 Collections.sort(list);
@@ -41,6 +43,7 @@ public class Scores {
             }
         } else {
             list.add(score);
+            Collections.sort(list);
         }
         writeListsToFile();
     }
@@ -69,6 +72,35 @@ public class Scores {
             if (out != null) {
                 try {
                     out.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
+    
+    private void readListFromFile() {
+        ObjectInputStream input = null;
+        try {
+            input = new ObjectInputStream(
+                    new FileInputStream("scores.dat"));
+            int i = 0;
+            while(true) {
+                lists[i] = (List<Score>) input.readObject();
+                i++;
+            }
+        } catch (EOFException ex) {
+            
+        } catch (FileNotFoundException ex) {
+                        
+        } catch(IOException ex) {
+            ex.printStackTrace();               
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
